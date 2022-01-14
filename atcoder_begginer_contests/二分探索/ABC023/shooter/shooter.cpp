@@ -7,9 +7,19 @@ int N;
 vector<vector<int>> HS;
 
 bool check(int64_t X) {
-  // 得点が X 以上となる場合に true
-  int64_t score = 0;
-  return true;
+  vector<int64_t> T(N, 0);
+
+  bool ok = true;
+  for (int i = 0; i < N; ++i) {
+    if (X < HS[i][0]) ok = false;
+    else T[i] = (X - HS[i][0]) / HS[i][1];
+  }
+  sort(T.begin(), T.end());
+  for (int i = 0; i < N; ++i) {
+    if (T[i] < i) ok = false;
+  }
+
+  return ok;
 }
 
 int main() {
