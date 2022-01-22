@@ -65,6 +65,9 @@ int main() {
     used[min_v] = true; // 使用した交差点は済とする
   }
 
+  // 最短経路の距離を保存
+  int min_dist = dist[N];
+
   // 最短経路を復元する
   vector<int> paths;
 
@@ -79,31 +82,47 @@ int main() {
   reverse(paths.begin(), paths.end());
 
   // 第2最短経路をダイクストラで求める
+  // 参考: https://qiita.com/nariaki3551/items/821dc6ffdc552d3d5f22
+  vector<long long> candidates;
 
+  for (int i = 0; i < paths.size() - 1; ++i) {
+    vector<bool> used(N + 1, false);
+    vector<long long> dist(N + 1, INF);
+    dist[st] = 0;
 
-  // for debug
-  cout << endl;
+    // spur_node -> spur_node_to の移動は認めない
+    int spur_node = paths[i];
+    int spur_node_to = paths[i + 1];
 
-  // グラフ
-  for (int i = 1; i <= N; ++i) {
-    cout << "from : " << i << endl;
-    for (auto e: G[i]) {
-      cout << "to: " << e.to << ", w: " << e.w << endl;
+    for (int i = 1; i <= N; ++i) {
+      // 確定していない交差点のうち、dist が最小の交差点を探す
+      long long min_dist = INF;
+      int min_v = -1;
+      for (int v = 1; v <= N; ++v) {
+        if ( !used[v] && dist[v] < min_dist) {
+          min_dist = dist[v];
+          min_v = v;
+        }
+      }
+
+      // そのような頂点がない場合は終了
+      if (min_v == -1) break;
+
+      // min_v を頂点とした各辺を緩和する
+      for (auto e: G[min_v]) {
+        // spur_node からの spur_node_to への移動は行わない
+        if (min_v == spur_node && e.to == spur_node_to) continue;
+
+        chmin(dist[e.to], dist[min_v] + e.w);
+      }
+      used[min_v] = true; // 使用した交差点は済とする
     }
-    cout << endl;
+
+    // 第2最短経路の候補を格納する
+    if (dist[N] != INF && dist[N] != min_dist) candidates.push_back(dist[N]);
   }
 
-  // 各点までの最小距離
-  for (int v = 1; v <= N; ++v) {
-    cout << "v, dist: " << v << ", " << dist[v] << endl;
-  }
-  cout << endl;
-
-  // 最短経路の復元
-  v = N;
-  for (auto e: paths) {
-    cout << e << "->"; 
-  }
-  cout << endl;
+  // 第2最短経路の候補のうち、最も短い距離が第2最短経路
+  sort(candidates.begin(), candidates.end());
+  cout << candidates[0] << endl;
 }
-
