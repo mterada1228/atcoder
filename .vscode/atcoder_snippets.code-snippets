@@ -1,0 +1,60 @@
+{
+  "main function": {
+    "scope": "cpp",
+    "prefix": "int main",
+    "body": [
+      "#include <iostream>",
+      "#include <vector>",
+      "#include <math.h>",
+      "#include <iomanip>",
+      "#include <algorithm>",
+      "#include <queue>",
+      "using namespace std;",
+      "",
+      "int main() {",
+      "  return 0;",
+      "}"
+    ]
+  },
+
+  "chmax function": {
+    "scope": "cpp",
+    "prefix": "chmax",
+    "body": [
+      "template<class T> void chmax(T& a, T b) {",
+      "  if (a < b) {",
+      "    a = b;",
+      "  }",
+      "}"
+    ]
+  },
+
+  "chmin function": {
+    "scope": "cpp",
+    "prefix": "chmin",
+    "body": [
+      "template<class T> void chmin(T& a, T b) {",
+      "  if (a > b) {",
+      "    a = b;",
+      "  }",
+      "}"
+    ]
+  },
+
+  "toBinary function": {
+    "scope": "cpp",
+    "prefix": "toBinary",
+    "body": [
+      "string toBinary(long long n) {"
+      "	string res;"
+      "	while(n != 0) {",
+      "		res.push_back('0' + (n % 2));",
+      "		n /= 2;",
+      "	}",
+      "	reverse(res.begin(), res.end());",
+      "	return res;",
+      "}"
+    ],
+    "description": "10進数を2進数の文字列形式にして返す"
+  },
+}
