@@ -3,12 +3,7 @@
     "scope": "cpp",
     "prefix": "int main",
     "body": [
-      "#include <iostream>",
-      "#include <vector>",
-      "#include <math.h>",
-      "#include <iomanip>",
-      "#include <algorithm>",
-      "#include <queue>",
+      "#include <bits/stdc++.h>",
       "using namespace std;",
       "",
       "int main() {",
