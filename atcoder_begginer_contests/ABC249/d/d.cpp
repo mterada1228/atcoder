@@ -5,33 +5,24 @@ int main() {
   int n;
   cin >> n;
   
-  vector<int> A(n);
+  vector<long long> A(200000 + 1);
 
-  for (int i = 0; i < n; ++i) cin >> A[i];
+  for (int r = 0; r < n; ++r) {
+    long long a;
+    cin >> a;
 
-  map<int, long long> mp;
-
-  for (int i = 0; i < n; ++i) {
-    ++mp[A[i]];
+    ++A[a];
   }
 
-  long long result = 0;
+  long long ans = 0;
 
-  for (auto iter = mp.begin(); iter != mp.end(); iter++) {
-    vector<long long> divisor;
-    divisor.push_back(1);
-    for (long long i = 1; i < iter->first; ++i) {
-      if (iter->first % i == 0) {
-        divisor.push_back(iter->first / i);
-      }
-    }
-
-    for (int i = 0; i < divisor.size() - 1; i += 2) {
-      result += (iter->second * mp[divisor[i]] * mp[divisor[i + 1]] * 2);
+  for (int r = 1; r <= 200000; ++r) {
+    for (int q = 1; q * r <= 200000; ++q) {
+      ans += A[r] * A[q] * A[q * r];
     }
   }
 
-  cout << result << endl;
+  cout << ans << endl;
 
   return 0;
 }
