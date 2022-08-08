@@ -7,7 +7,7 @@
 using namespace std;
 
 // mod m における、a の逆元を求める
-// a / b (mod m) ≡ a * modinv(b, a % m) % m
+// a / b (mod m) ≡ a * modinv(b, m) % m
 long long modinv(long long a, long long m) {
   long long b = m, u = 1, v = 0;
   while (b) {
