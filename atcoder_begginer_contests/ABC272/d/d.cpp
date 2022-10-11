@@ -6,32 +6,60 @@ int main() {
 
   cin >> n >> m;
 
-  vector<vector<long long>> seen(n, vector<long long>(n, -1));
+  map<vector<int>, set<vector<int>>> mp;
 
-  queue<vector<long long>> todo;
+  for (int i = 1; i <= n; ++i) {
+    for (int j = 1; j <= n; ++j) {
+      // k - i >= 0
+      for (int k = 1; k <= min(pow(m, 0.5) + i, (double)n); ++k) {
+        double l = j + pow(m - pow(k - i, 2), 0.5);
+        if (l == floor(l) && l > 0 && l <= n) {
+          mp[{i, j}].insert({ k, (int)l });
+        }
 
-  todo.push({ 0, 0 });
-  seen[0][0] = 0;
+        l = j - pow(m - pow(k - i, 2), 0.5);
+        if (l == floor(l) && l > 0 && l <= n) {
+          mp[{i, j}].insert({ k, (int)l });
+        }
+      }
+      // k - i < 0
+      for (int k = n; k >= max(pow(m, 0.5) + i, (double)0); --k) {
+        double l = j + pow(m - pow(k - i, 2), 0.5);
+        if (l == floor(l) && l > 0 && l <= n) {
+          mp[{i, j}].insert({ k, (int)l });
+        }
 
-  while (!todo.empty()) {
-    vector<long long> v = todo.front();
-    todo.pop();
-
-    for (int i = 0; i < n; ++i) {
-      for (int j = 0; j < n; ++j) {
-        if (pow(v[0] - i, 2) + pow(v[1] - j, 2) == m) {
-          if (seen[i][j] == -1) {
-            todo.push({i, j});
-            seen[i][j] = seen[v[0]][v[j]] + 1;
-          }
+        l = j - pow(m - pow(k - i, 2), 0.5);
+        if (l == floor(l) && l > 0 && l <= n) {
+          mp[{i, j}].insert({ k, (int)l });
         }
       }
     }
   }
 
-  for (auto e: seen) {
-    for (auto f: e) {
-      cout << f << " ";
+  vector<vector<int>> ans(n + 1, vector<int>(n + 1, -1));
+
+  ans[1][1] = 0;
+
+  queue<vector<int>> todo;
+  todo.push({ 1, 1 });
+
+  while(!todo.empty()) {
+    vector<int> v = todo.front();
+    todo.pop();
+
+    for (auto e: mp[v]) {
+      // 探索済みはスキップする
+      if (ans[e[0]][e[1]] != -1) continue;
+
+      ans[e[0]][e[1]] = ans[v[0]][v[1]] + 1;
+      todo.push(e);
+    }
+  }
+
+  for (int i = 1; i <= n; ++i) {
+    for (int j = 1; j <= n; ++j) {
+      cout << ans[i][j] << " ";
     }
     cout << endl;
   }
