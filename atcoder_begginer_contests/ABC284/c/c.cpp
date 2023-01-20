@@ -52,21 +52,18 @@ int main() {
   UnionFind uf(n + 1);
 
   for (int i = 0; i < m; ++i) {
-    int a, b;
-    cin >> a >> b;
+    int u, v;
+    cin >> u >> v;
 
-    uf.unite(a, b);
+    uf.unite(u, v);
   }
 
-  int max = 1;
-
+  set<int> ans;
   for (int i = 1; i <= n; ++i) {
-    if (uf.size(i) > max) {
-      max = uf.size(i);
-    }
+    ans.insert(uf.root(i));
   }
 
-  cout << max << endl;
+  cout << ans.size() << endl;
 
   return 0;
 }
