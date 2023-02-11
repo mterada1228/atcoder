@@ -1,69 +1,56 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool check1(vector<char> a, vector<char> b) {
-  if (a == b) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-bool check2(vector<char> a, vector<char> b) {
-  if (a.size() >= 2) {
-    if (a.size() <= b.size()) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  return false;
-}
-
 int main() {
   string s, t;
   cin >> s >> t;
 
-  vector<vector<char>> s_arr;
-  vector<char> s_arr_part = { s[0] };
-  char now_s = s[0];
+  vector<pair<char, int>> S, T;
 
-  for (int i = 1; i < s.size(); ++i) {
-    if (s[i] == now_s) {
-      s_arr_part.push_back(s[i]);
+  char cur = s[0];
+  int cnt = 0;
+
+  for (int i = 0; i < s.size(); ++i) {
+    if (cur == s[i]) {
+      ++cnt;
     } else {
-      s_arr.push_back(s_arr_part);
-      s_arr_part = { s[i] };
-      now_s = s[i];
+      S.push_back({cur, cnt});
+      cur = s[i];
+      cnt = 1;
     }
   }
-  s_arr.push_back(s_arr_part);
+  S.push_back({cur, cnt});
 
-  vector<vector<char>> t_arr;
-  vector<char> t_arr_part = { t[0] };
-  char now_t = t[0];
+  cur = t[0];
+  cnt = 0;
 
-  for (int i = 1; i < t.size(); ++i) {
-    if (t[i] == now_t) {
-      t_arr_part.push_back(t[i]);
+  for (int i = 0; i < t.size(); ++i) {
+    if (cur == t[i]) {
+      ++cnt;
     } else {
-      t_arr.push_back(t_arr_part);
-      t_arr_part = { t[i] };
-      now_t = t[i];
+      T.push_back({cur, cnt});
+      cur = t[i];
+      cnt = 1;
     }
   }
-  t_arr.push_back(t_arr_part);
+  T.push_back({cur, cnt});
 
-  if (s_arr.size() != t_arr.size()) {
+  if (S.size() != T.size()) {
     cout << "No" << endl;
     return 0;
   }
 
-  for (int i = 0; i < s_arr.size(); ++i) {
-    if (!check1(s_arr[i], t_arr[i]) && !check2(s_arr[i], t_arr[i])) {
-      cout << "No" << endl;
-      return 0;
+  for (int i = 0; i < S.size(); ++i) {
+    if (S[i].first == T[i].first && S[i].second == T[i].second) {
+      continue;
     }
+
+    if (S[i].first == T[i].first && S[i].second >= 2 && S[i].second < T[i].second) {
+      continue;
+    }
+
+    cout << "No" << endl;
+    return 0;
   }
 
   cout << "Yes" << endl;

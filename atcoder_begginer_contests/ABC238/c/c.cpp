@@ -1,68 +1,90 @@
-#include <iostream>
-#include <vector>
-#include <math.h>
-#include <iomanip>
-#include <algorithm>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
 
-// mod m における、a の逆元を求める
-// a / b (mod m) ≡ a * modinv(b, m) % m
-long long modinv(long long a, long long m) {
-  long long b = m, u = 1, v = 0;
-  while (b) {
-      long long t = a / b;
-      a -= t * b; swap(a, b);
-      u -= t * v; swap(u, v);
-  }
-  u %= m; 
-  if (u < 0) u += m;
-  return u;
-}
+long long mod = 998244353;
 
-long long N;
+// modint
+class mint {
+  long long x;
+public:
+  mint(long long x=0) : x((x%mod+mod)%mod) {}
+  mint operator-() const { 
+    return mint(-x);
+  }
+  mint& operator+=(const mint& a) {
+    if ((x += a.x) >= mod) x -= mod;
+    return *this;
+  }
+  mint& operator-=(const mint& a) {
+    if ((x += mod-a.x) >= mod) x -= mod;
+    return *this;
+  }
+  mint& operator*=(const  mint& a) {
+    (x *= a.x) %= mod;
+    return *this;
+  }
+  mint operator+(const mint& a) const {
+    mint res(*this);
+    return res+=a;
+  }
+  mint operator-(const mint& a) const {
+    mint res(*this);
+    return res-=a;
+  }
+  mint operator*(const mint& a) const {
+    mint res(*this);
+    return res*=a;
+  }
+  mint pow(long long t) const {
+    if (!t) return 1;
+    mint a = pow(t>>1);
+    a *= a;
+    if (t&1) a *= *this;
+    return a;
+  }
+
+  // for prime mod
+  mint inv() const {
+    return pow(mod-2);
+  }
+  mint& operator/=(const mint& a) {
+    return (*this) *= a.inv();
+  }
+  mint operator/(const mint& a) const {
+    mint res(*this);
+    return res/=a;
+  }
+
+  friend ostream& operator<<(ostream& os, const mint& m){
+    os << m.x;
+    return os;
+  }
+};
 
 int main() {
+  long long N;
   cin >> N;
 
-  long long ans = 0;
-  int cnt = 0;
-  long long N_origin = N;
-
-  N /= 10;
-
-  while (N > 0) {
-    long long k = 9 * pow(10, cnt);
-
-    // k * (k + 1) / 2 (mod 998244353)
-    k %= 998244353;
-    long long tmp = k;
-    tmp *= (k + 1);
-    tmp %= 998244353;
-    tmp *= modinv(2, 998244353); // 1/2 するのは、2 の mod M における逆元を掛けるのと同じ
-    tmp %= 998244353;
-
-    ans += tmp;
-    ans %= 998244353;
-    
-    ++cnt;
-    N /= 10;
+  int dig = 1;
+  long long tmp_n = N;
+  while (tmp_n >= 10) {
+    tmp_n /= 10;
+    ++dig;
   }
 
-  long long k = N_origin - pow(10, cnt) + 1;
+  mint sum = mint(0);
+  long long ten = 1;
 
-  // k * (k + 1) / 2 (mod 998244353)
-  k %= 998244353;
-  long long tmp = k;
-  tmp *= (k + 1);
-  tmp %= 998244353;
-  tmp *= modinv(2, 998244353);
-  tmp %= 998244353;
+  for (int i = 1; i < dig; ++i) {
+    mint n = mint((ten * 10 - 1) - ten + 1);
+    sum = sum + (n * (mint(1) + n) / mint(2));
+    ten *= 10;
+  }
 
-  ans += tmp;
-  ans %= 998244353;
+  mint n = mint(N - ten + 1);
+  sum = sum + (n * (mint(1) + n) / mint(2));
 
-  cout << ans << endl;
+  cout << sum << endl;
 
   return 0;
 }

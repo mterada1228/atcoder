@@ -1,75 +1,46 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-static int cnt;
-
-// 正方形であるかをチェックする
-bool check_square(vector<vector<int>> arr) {
-  if (arr.size() != 4) return false;
-
-  vector<double> D;
-
-  for (int i = 0; i < 4; ++i) {
-    for (int j = i + 1; j < 4; ++j) {
-      double d = pow(pow(arr[i][0] - arr[j][0], 2) +
-                     pow(arr[i][1] - arr[j][1], 2), 0.5);
-      D.push_back(d);
-    }
-  }
-
-  sort(D.begin(), D.end());
-
-  if (D[0] == D[1] && D[1] == D[2] && D[2] == D[3]) {
-    if (D[4] == D[5]) {
-      if (pow(D[4], 2) == 2 * pow(D[0], 2)) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-void recursive_comb(vector<vector<int>> selected,
-                    vector<vector<int>> arr,
-                    int index,
-                    int rest) {
-  if (rest == 0) {
-    if (check_square(selected)) cnt++;
-  } else {
-    if (index < 0) return;
-    recursive_comb(selected, arr, index - 1, rest);
-    selected[rest - 1] = arr[index];
-    recursive_comb(selected, arr, index - 1, rest - 1);
-  }
-}
-
-// 配列の組み合わせを再帰関数によって列挙する
-void array_foreach_comb(vector<vector<int>> arr,
-                        int k) {
-  vector<vector<int>> selected(k);
-  int index = arr.size() - 1;
-  recursive_comb(selected, arr, index, k);
-}
-
 int main() {
-  vector<vector<int>> arr;
-
+  vector<string> S;
   for (int i = 0; i < 9; ++i) {
     string s;
     cin >> s;
+    S.push_back(s);
+  }
+
+  set<set<pair<int, int>>> st;
+
+  for (int i = 0; i < 9; ++i) {
     for (int j = 0; j < 9; ++j) {
-      if (s[j] == '#') {
-        arr.push_back({ i, j });
+      for (int di = -8; di <= 8; ++di) {
+        for (int dj = -8; dj <= 8; ++dj) {
+
+          if(di == 0 && dj == 0) continue;
+
+          int i2 = i + di, j2 = j + dj;
+          int i3 = i2 - dj, j3 = j2 + di;
+          int i4 = i3 - di, j4 = j3 - dj;
+
+          if (
+            (i >= 0 && i <= 8 && j >= 0 && j <= 8 && S[i][j] == '#') && 
+            (i2 >= 0 && i2 <= 8 && j2 >= 0 && j2 <= 8 && S[i2][j2] == '#') && 
+            (i3 >= 0 && i3 <= 8 && j3 >= 0 && j3 <= 8 && S[i3][j3] == '#') && 
+            (i4 >= 0 && i4 <= 8 && j4 >= 0 && j4 <= 8 && S[i4][j4] == '#') 
+          ) {
+            set<pair<int, int>> sq;
+            sq.insert({i, j});
+            sq.insert({i2, j2});
+            sq.insert({i3, j3});
+            sq.insert({i4, j4});
+            st.insert(sq);
+          }
+        }
       }
     }
   }
 
-  cnt = 0;
-
-  array_foreach_comb(arr, 4);
-
-  cout << cnt << endl;
+  cout << st.size() << endl;
 
   return 0;
 }

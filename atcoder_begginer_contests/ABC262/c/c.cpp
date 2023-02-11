@@ -1,15 +1,15 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int nCr(int n, int r) {
-  int top = 1;
-  int bottom = 1;
+long long nCr(long long n, long long r) {
+  long long top = 1;
+  long long bottom = 1;
 
-  for (int i = n - r + 1; i <= n; ++i) {
+  for (long long i = n - r + 1; i <= n; ++i) {
     top *= i;
   }
 
-  for (int i = 1; i <= r; ++i) {
+  for (long long i = 1; i <= r; ++i) {
     bottom *= i;
   }
 
@@ -17,27 +17,33 @@ int nCr(int n, int r) {
 }
 
 int main() {
-  int n;
-
+  long long n;
   cin >> n;
 
-  vector<int> a(n + 1);
-  int same = 0;
+  vector<long long> A(n + 1, 0);
 
-  for (int i = 1; i <= n; ++i) {
-    cin >> a[i];
-    if (a[i] == i) ++same;
+  long long match = 0;
+
+  for (long long i = 1; i <= n; ++i) {
+    long long a;
+    cin >> a;
+
+    if (i == a) {
+      ++match;
+    }
+
+    A[i] = a;
   }
 
-  long long cnt = 0;
+  long long reverse_match = 0;
 
-  for (int i = 1; i <= n; ++i) {
-    if (a[i] > i && a[a[i]] == i) ++cnt;
+  for (long long i = 1; i <= n; ++i) {
+    if (i != A[i] && i == A[A[i]]) {
+      ++reverse_match;
+    }
   }
 
-  cnt = cnt + nCr(same, 2);
-
-  cout << cnt << endl;
+  cout << nCr(match, 2) + reverse_match / 2 << endl;
 
   return 0;
 }

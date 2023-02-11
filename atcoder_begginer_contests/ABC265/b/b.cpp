@@ -5,37 +5,32 @@ int main() {
   long long n, m, t;
   cin >> n >> m >> t;
 
-  vector<long long> A(n-1);
-  for (int i = 0; i < n - 1; ++i) {
-    long long a;
-    cin >> a;
+  vector<long long> M(n, 0);
+  vector<long long> A(n, 0);
 
-    A[i] = a;
+  for (int i = 0; i < n - 1; ++i) {
+    cin >> A[i + 1];
   }
 
-  vector<long long> B(n);
   for (int i = 0; i < m; ++i) {
-    int x;
-    long long y;
-
+    long long x, y;
     cin >> x >> y;
 
-    B[x] = y;
+    M[x - 1] = y;
   }
 
-  for (int i = 0; i <= n-1; ++i) {
-    // チェック
-    if (t <= A[i]) {
+  for (int i = 0; i < n; ++i) {
+    t -= A[i];
+
+    if (t <= 0) {
       cout << "No" << endl;
       return 0;
     }
 
-    // 移動
-    t -= A[i];
-    // ボーナス加算
-    t += B[i + 2];
+    t += M[i];
   }
 
   cout << "Yes" << endl;
+
   return 0;
 }
