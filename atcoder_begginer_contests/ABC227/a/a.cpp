@@ -11,11 +11,20 @@ int N, K, A;
 int main() {
   cin >> N >> K >> A;
 
-  int ans = (A + K - 1) % N;
-  
-  if (ans == 0) ans = N;
+  int cur = A;
+  int next;
 
-  cout << ans << endl;
+  while (K > 1) {
+    --K;
+
+    if (cur == N) {
+      cur = 1;
+    } else {
+      ++cur;
+    }
+  }
+
+  cout << cur << endl;
 
   return 0;
 }
