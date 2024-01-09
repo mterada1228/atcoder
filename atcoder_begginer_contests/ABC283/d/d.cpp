@@ -5,23 +5,28 @@ int main() {
   string s;
   cin >> s;
 
-  vector<char> rem;
-  map<char, int> box;
+  int c = 0;
+
+  vector<vector<char>> X(300000);
+  map<char, int> used;
 
   for (auto e: s) {
-    if ('a' <= e && e <= 'z') {
-      if (box[e] == 1) {
+    if (e == '(') {
+      ++c;
+    } else if (e == ')') {
+      for (auto f: X[c]) {
+        used[f] = 0;
+      }
+      X[c] = {};
+      --c;
+    } else {
+      if (used[e] != 0) {
         cout << "No" << endl;
         return 0;
       } else {
-        box[e] = 1;
-        rem.push_back(e);
+        X[c].push_back(e);
+        ++used[e];
       }
-    } else if (e == ')') {
-      for (auto f: rem) {
-        box[f] = 0;
-      }
-      rem = {};
     }
   }
 
