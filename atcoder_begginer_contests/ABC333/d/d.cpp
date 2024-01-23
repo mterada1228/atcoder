@@ -3,33 +3,17 @@ using namespace std;
 
 vector<int> path;
 vector<int> todo;
-int ans = 2147483647; 
 
 void DFS(vector<vector<int>> G, int i) {
+  if (todo[i] == 0) path.push_back(i);
+  todo[i] = 1;
+
   vector<int> nexts;
 
   for (auto e: G[i]) {
-    path.push_back(e);
-    todo[e] = 1;
-
-    if (todo[e] == 0 && G[e].size() > 0) nexts.push_back(e);
-  }
-
-  if (nexts.size() == 0) {
-
-    cout << "debug ====" << endl;
-    for (auto e: path) {
-      cout << e << ", ";
+    if (todo[e] == 0) {
+      nexts.push_back(e);
     }
-    cout << endl;
-
-    int len = path.size();
-
-    ans = min(ans, len);
-    path = {};
-    todo = {};
-
-    return;
   }
 
   for (auto e: nexts) {
@@ -53,14 +37,26 @@ int main() {
     G[v].push_back(u);
   }
 
-  path.push_back(1);
-  todo[1] = 1;
+  vector<int> lens;
 
   for (auto e: G[1]) {
+    todo[1] = 1;
+
     DFS(G, e);
+
+    int len = path.size();
+    lens.push_back(len);
+
+    path = {};
   }
 
-  cout << ans << endl;
+  // 最大の部分木を残して、他の部分木を全て消す場合が最小
+  int max_tree = 0;
+  for (auto e: lens) {
+    max_tree = max(max_tree, e);
+  }
+
+  cout << n - max_tree << endl;
 
   return 0;
 }
